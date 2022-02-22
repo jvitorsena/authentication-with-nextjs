@@ -2,9 +2,14 @@ import Image from 'next/image'
 import loading from '../../../public/images/loading.gif'
 import Api from '../../data/api/api'
 import Modal from '../../components/Modal'
-import * as cookie from 'cookie'
 
-export default function ForcarAutenticacao(props) {
+interface ResProps {
+    validation: Boolean
+    children: Object
+}
+
+
+export default function ForcarAutenticacao(props: ResProps) {
 
     function renderizarConteudo() {
         return (
@@ -33,12 +38,16 @@ export default function ForcarAutenticacao(props) {
     }
 
 
-    if (props.valid) {
+    if (props.validation) {
         return renderizarConteudo()
-    } else if (!props.valid) {
+    } else if (!props.validation) {
         return (
             <>
-                <Modal />
+                <Modal
+                    title='Falha ao acessar esta página !'
+                    subTitle='Para ter acesso ao sistema, por favor faça o login'
+                    btnTitle='Fazer login'
+                />
             </>
         )
     } else {

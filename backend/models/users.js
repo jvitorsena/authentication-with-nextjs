@@ -8,6 +8,7 @@ module.exports = app => {
         name:           {type: Sequelize.STRING(255)},
         user:           {type: Sequelize.STRING(255)},
         password:       {type: Sequelize.STRING(255)},
+        token:          {type: Sequelize.STRING(255)},
         isActive:       {type: Sequelize.DataTypes.BOOLEAN, defaultValue: true}
     }, {freezeTableName: true})
 

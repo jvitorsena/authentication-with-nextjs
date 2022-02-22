@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",
+    "@heroicons/react": "^1.0.5",
     "axios": "^0.26.0",
     "cookie": "^0.4.2",
     "js-cookie": "^3.0.1",

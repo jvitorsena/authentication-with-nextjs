@@ -1,5 +1,5 @@
 import { useState } from "react"
-import AuthInput from "../components/AuthInput"
+import AuthInput from "../components/auth/AuthInput"
 import Image from "next/image"
 import Cookie from 'js-cookie'
 import axios from "axios"
@@ -7,33 +7,33 @@ import Router from "next/router"
 
 export default function Login() {
 
-  const [email, setEmail] = useState('')
+  const [user, setUser] = useState('')
   const [password, setPasswd] = useState('')
   const [msg, setMsg] = useState({
     type: '',
     mensagem: ''
   })
 
-  const signin = async (user, senha) => {
+  async function login(usuario, senha) {
     try {
-      await Cookie.remove('admin')
-      const headers = { 'headers': { 'Content-Type': 'application/json' } }
-      await axios.create({ baseURL: 'http://localhost:5000' })
-        .post("/signin", { user: user, password: senha }, headers)
-        .then((response) => {
-          Cookie.set('admin', response.data.token)
-          Router.push('/')
-        })
-        .catch((err) => {
-          setMsg({
-            type: 'error',
-            mensagem: err.response.data
-          })
-        })
+        await Cookie.remove('admin')
+        const headers = { 'headers': { 'Content-Type': 'application/json' } }
+        await axios.create({ baseURL: 'http://localhost:5000' })
+            .post("/signin", { user: usuario, password: senha }, headers)
+            .then((response) => {
+                Cookie.set('admin', response.data.token)
+                Router.push('/')
+            })
+            .catch((err) => {
+                setMsg({
+                    type: 'error',
+                    mensagem: err.response.data
+                })
+            })
     } finally {
-
+        return msg
     }
-  }
+}
 
   return (
     <div className="flex h-screen items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500">
@@ -45,9 +45,9 @@ export default function Login() {
         {msg.type === 'error' ? <p style={{ color: "red" }}>{msg.mensagem}</p> : ""}
         <AuthInput
           label="User:"
-          value={email}
+          value={user}
           type="text"
-          changeValue={setEmail}
+          changeValue={setUser}
         />
 
         <AuthInput
@@ -59,7 +59,7 @@ export default function Login() {
 
         <div className="mt-6 w-full flex flex-col items-center">
           <button
-            onClick={() => signin(email, password)}
+            onClick={() => login(user, password)}
             // onKeyPress={(e) => console.log(e)}
             className={`
               bg-green-500 hover:bg-green-400

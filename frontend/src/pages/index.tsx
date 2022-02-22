@@ -1,21 +1,53 @@
 import ForcarAutenticacao from "../components/auth/ForcarAutenticacao";
-import Cookie from 'js-cookie'
-import { useState } from "react";
 import Api from '../data/api/api.js'
 import * as cookie from 'cookie'
+import { useState } from "react";
+import NewUser from "../components/NewUser";
+import Welcome from "../components/Welcome"
+import Table from '../components/Table'
+
+interface user {
+  id: Number
+  name: string
+  user: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
 
 export default function Home(props) {
 
+
+  console.log(props.getAllUsers)
+
+  const [visible, setVisible] = useState<'welcome' | 'register' | 'table'>('welcome')
+
+  const user: user = props.userLoged[0]
+
   return (
     <>
-      <ForcarAutenticacao valid={props.res}>
+      <ForcarAutenticacao validation={props.validationToken} >
         <div className="flex h-screen items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500">
-          <div className="bg-slate-300 p-4 rounded-2xl shadow-lg flex flex-col items-end">
-            <h1 className="text-3xl font-bold p-5 text-gray-700">
-              Bem vindo ao meu sistema !
-            </h1>
+          {/* Tela inicial */}
+          {(visible == 'welcome') ? (
+            <Welcome 
+              userName={user?.name}
+              setProps={setVisible}
+            />
+          ) : null}
+          {/* Tela de registro */}
+          {(visible == 'register') ? (
+            <NewUser
+              setProps={setVisible}
+            />
+          ) : null}
+          {(visible == 'table') ? (
+            <Table
+              usersData={props.getAllUsers}
+              setProps={setVisible}
+            />
+          ): null}
 
-          </div>
         </div>
       </ForcarAutenticacao>
     </>
@@ -24,11 +56,14 @@ export default function Home(props) {
 
 export async function getServerSideProps(context) {
 
+
   const { api, headers } = Api
-  const parsedCookie = cookie.parse(context.req.headers.cookie)
-  const Cookie = parsedCookie.admin
-  const res = await (await api.post("/validateToken", { token: Cookie }, headers)).data
+  const parsedCookie = cookie.parse(context.req.headers.cookie ?? '')
+  const Cookie = parsedCookie.admin ?? ''
+  const validationToken = await (await api.post("/validateToken", { token: Cookie }, headers)).data
+  const userLoged = await (await api.post('/users/token', { token: Cookie }, headers)).data
+  const getAllUsers = await (await api.get('/users')).data
   return {
-    props: { res }, // will be passed to the page component as props
+    props: { validationToken, userLoged, getAllUsers }, // will be passed to the page component as props
   }
 }

@@ -2,7 +2,13 @@ import { Dialog, Transition } from '@headlessui/react'
 import Router from 'next/router'
 import { Fragment, useState } from 'react'
 
-export default function MyModal() {
+interface ResProps {
+  title: string
+  subTitle: string
+  btnTitle: string
+}
+
+export default function MyModal(props: ResProps) {
   let [isOpen, setIsOpen] = useState(true)
 
   function closeModal() {
@@ -67,11 +73,11 @@ export default function MyModal() {
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Falha ao acessar esta página !
+                    {props.title}
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Para ter acesso ao sistema, por favor faça o login
+                      {props.subTitle}
                     </p>
                   </div>
 
@@ -81,7 +87,7 @@ export default function MyModal() {
                       className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                       onClick={closeModal}
                     >
-                      Fazer login
+                      {props.btnTitle}
                     </button>
                   </div>
                 </div>

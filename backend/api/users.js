@@ -4,17 +4,27 @@ const bcrypt = require('bcrypt-nodejs')
 
 module.exports = app => {
 
-    const { existsOrError, notExistsOrError, equalsOrError } = app
+    const { existsOrError, notExistsOrError, equalsOrError } = app.api.validation
+
     const encryptPassword = password => {
         const salt = bcrypt.genSaltSync(10)
         return bcrypt.hashSync(password, salt)
     }
 
-    const getAll = async(req,res) => {
-        await db.users.findAll().then((tarefas) => {return res.status(200).json(tarefas)})
-            .catch(() => {return res.status(400).json({erro: true})})
+    const getAll = async (req, res) => {
+        await db.users.findAll().then((tarefas) => { return res.status(200).json(tarefas) })
+            .catch(() => { return res.status(400).json({ erro: true }) })
     }
-    
+
+    const getForToken = async (req, res) => {
+        await db.users.findAll({
+            where: {
+                token: req.body.token
+            },
+            attributes: { exclude: ['password','token'] }
+        }).then((user) => {return res.status(200).json(user)})
+    }
+
     const save = async (req, res) => {
         const users = { ...req.body }
         console.log(req.body)
@@ -22,18 +32,28 @@ module.exports = app => {
         if (req.params.id) users.id = req.params.id
         // console.log(tarefas.tipoId)
 
-        users.password = encryptPassword(users.password)
+        const existsUser = await db.users.findAll({
+            where: {
+                user: users.user
+            }
+        })
 
         try {
-            // existsOrError(tarefas.descricao, 'Descrição não informado')
+            existsOrError(users.name, 'Nome não informado')
+            existsOrError(users.user, 'Usuario não informado')
+            existsOrError(users.password, 'Senha não informada')
+            notExistsOrError(existsUser, 'Usuario já existe')
         } catch (msg) {
             return res.status(400).send(msg)
         }
 
+        users.password = encryptPassword(users.password)
+
         if (users.id) {
-            await db.tarefas.update({
-                descricao: tarefas.descricao,
-                tiposId: tarefas.tipoId
+            await db.users.update({
+                name: users.name,
+                user: users.user,
+                password: users.password
             }, {
                 where: {
                     id: req.params.id
@@ -41,7 +61,7 @@ module.exports = app => {
             }).then(() => {
                 return res.status(200).json({
                     erro: false,
-                    mensagem: `Tarefa ${tarefas.descricao} alterado`
+                    mensagem: `Usuario ${users.name} alterado`
                 })
             }).catch(() => { return res.status(400).json({ erro: true }) })
         } else {
@@ -58,5 +78,27 @@ module.exports = app => {
         }
     }
 
-    return { save, getAll }
+    const remove = async (req, res) => {
+        try {
+            await db.users.destroy({
+                where: {
+                    id: req.params.id
+                }
+            }).then(() => {
+                return res.status(200).json({
+                    erro: false,
+                    mensagem: `Usuario id ${req.params.id} deletado`
+                })
+            }).catch(() => {
+                return res.status(400).json({
+                    erro: true,
+                    mensagem: `Usuario id ${req.params.id} não encontrado`
+                })
+            })
+        } catch (msg) {
+            res.status(400).send(msg)
+        }
+    }
+
+    return { save, getAll, remove, getForToken }
 }
