@@ -12,7 +12,18 @@ module.exports = app => {
     }
 
     const getAll = async (req, res) => {
-        await db.users.findAll().then((tarefas) => { return res.status(200).json(tarefas) })
+        await db.users.findAll({
+            attributes: {
+                include: [
+                    [
+                        Sequelize.fn("DATE_FORMAT", Sequelize.col("createdAt"),"%d-%m-%Y %H:%i:%s"), "createdAt"
+                    ],
+                    [
+                        Sequelize.fn("DATE_FORMAT", Sequelize.col("updatedAt"),"%d-%m-%Y %H:%i:%s"), "updatedAt"
+                    ]
+                ]
+            }
+        }).then((tarefas) => { return res.status(200).json(tarefas) })
             .catch(() => { return res.status(400).json({ erro: true }) })
     }
 
@@ -42,7 +53,7 @@ module.exports = app => {
             existsOrError(users.name, 'Nome não informado')
             existsOrError(users.user, 'Usuario não informado')
             existsOrError(users.password, 'Senha não informada')
-            notExistsOrError(existsUser, 'Usuario já existe')
+            if(!users.id) notExistsOrError(existsUser, 'Usuario já existe')
         } catch (msg) {
             return res.status(400).send(msg)
         }
@@ -64,11 +75,14 @@ module.exports = app => {
                     mensagem: `Usuario ${users.name} alterado`
                 })
             }).catch(() => { return res.status(400).json({ erro: true }) })
+
+            var date = new Date().toLocaleDateString('pt-BR', {timeZone: 'UTC'})
+
         } else {
             await db.users.create({
                 name: users.name,
                 user: users.user,
-                password: users.password
+                password: users.password,
             }).then(() => {
                 return res.status(200).json({
                     erro: false,

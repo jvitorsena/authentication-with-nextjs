@@ -7,7 +7,7 @@ module.exports = app => {
 
     /* Método para logar */
     const signin = async (req, res) => {
-        console.log(req.body)
+        // console.log(req.body)
         if (!req.body.user) {
             return res.status(400).send('Informe usuário!')
         }
@@ -20,8 +20,8 @@ module.exports = app => {
             raw: true,
         }).then(data => { return data[0] })
 
-        console.log(user)
-        console.log(req.body)
+        // console.log(user)
+        // console.log(req.body)
 
         
         /* Caso retorno seja diferente de true, retorna mensagem de erro */

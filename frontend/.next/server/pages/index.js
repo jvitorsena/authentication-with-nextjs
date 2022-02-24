@@ -137,8 +137,10 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(689);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _TableModal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(938);
+/* harmony import */ var _icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(728);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_TableModal__WEBPACK_IMPORTED_MODULE_4__]);
 _TableModal__WEBPACK_IMPORTED_MODULE_4__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
 
 
 
@@ -152,6 +154,7 @@ function NewUser(props) {
         type: '',
         mensagem: ''
     });
+    const { 0: error , 1: setError  } = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)('');
     async function register(user, name, password) {
         const { api , headers  } = _data_api_api_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z;
         await api.post("/users", {
@@ -165,10 +168,7 @@ function NewUser(props) {
             });
         }).catch((err)=>{
             if (err.response) {
-                setStatus({
-                    type: 'error',
-                    mensagem: err.response.data
-                });
+                setError(err.response.data);
             } else {
                 setStatus({
                     type: 'error',
@@ -189,6 +189,20 @@ function NewUser(props) {
                 className: "text-red-600",
                 children: status.mensagem
             }),
+            error ? /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: `
+                        flex items-center
+                        bg-red-400 text-white py-3 px-5 my-2
+                        border border-red-700 rounded-lg
+                    `,
+                children: [
+                    (0,_icons__WEBPACK_IMPORTED_MODULE_5__/* .IconeAtencao */ .wn)(),
+                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                        className: "ml-3",
+                        children: error
+                    })
+                ]
+            }) : false,
             /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("h1", {
                 className: "text-3xl font-bold p-5 text-gray-700",
                 children: "Novo Usuario"
@@ -200,19 +214,22 @@ function NewUser(props) {
                         label: "Name: ",
                         value: newUser,
                         type: "text",
-                        changeValue: setNewUser
+                        changeValue: setNewUser,
+                        disabled: false
                     }),
                     /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_auth_AuthInput__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z, {
                         label: "User: ",
                         value: nameUser,
                         type: "text",
-                        changeValue: setNameUser
+                        changeValue: setNameUser,
+                        disabled: false
                     }),
                     /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_auth_AuthInput__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z, {
                         label: "Password: ",
                         value: password1,
                         type: "password",
-                        changeValue: setPassword
+                        changeValue: setPassword,
+                        disabled: false
                     }),
                     /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
                         className: "flex flex-row",
@@ -270,8 +287,10 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(689);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _TableModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(938);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_TableModal__WEBPACK_IMPORTED_MODULE_5__]);
-_TableModal__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+/* harmony import */ var _UserEditModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(207);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_TableModal__WEBPACK_IMPORTED_MODULE_5__, _UserEditModal__WEBPACK_IMPORTED_MODULE_6__]);
+([_TableModal__WEBPACK_IMPORTED_MODULE_5__, _UserEditModal__WEBPACK_IMPORTED_MODULE_6__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+
 
 
 
@@ -280,7 +299,13 @@ _TableModal__WEBPACK_IMPORTED_MODULE_5__ = (__webpack_async_dependencies__.then 
 
 function Example({ usersData , setProps  }) {
     const { 0: showModal , 1: setShowModal  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(false);
-    const { 0: userName , 1: setUserName  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('');
+    const { 0: modalEdit , 1: setModalEdit  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(false);
+    const { 0: id1 , 1: setId  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(0);
+    const { 0: user1 , 1: setUser  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('');
+    const { 0: nameUser , 1: setNameUser  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('');
+    const { 0: createdAt1 , 1: setCreatedAt  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('');
+    const { 0: updatedAt1 , 1: setUpdatedAt  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('');
+    const { 0: password1 , 1: setPassword  } = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('');
     const { api , headers  } = _data_api_api__WEBPACK_IMPORTED_MODULE_2__/* ["default"] */ .Z;
     const del = async function(atr, name) {
         const url = "http://localhost:5000/users/".concat(atr);
@@ -292,19 +317,36 @@ function Example({ usersData , setProps  }) {
         const users = await axios__WEBPACK_IMPORTED_MODULE_3___default()["delete"](url, {
             data: {}
         }).then((response)=>{
-            console.log(response.data);
+        // console.log(response.data)
         });
         // setUserName(name)
         setShowModal(true);
     };
-    // console.log(props.usersData)
+    const edit = (id, name, user, createdAt, updatedAt, password)=>{
+        setId(id);
+        setUser(user);
+        setNameUser(name);
+        setPassword(password);
+        setCreatedAt(createdAt);
+        setUpdatedAt(updatedAt);
+        setModalEdit(true);
+    };
     return(/*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "flex flex-col",
         children: [
             showModal ? /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_TableModal__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z, {
                 title: "Usuario deletado",
                 btnTitle: "sair",
-                subTitle: userName
+                subTitle: user1
+            }) : null,
+            modalEdit ? /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_UserEditModal__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z, {
+                showModal: setModalEdit,
+                id: id1,
+                user: user1,
+                userName: nameUser,
+                createdAt: createdAt1,
+                updatedAt: updatedAt1,
+                password: password1
             }) : null,
             /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
                 className: "-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8",
@@ -382,7 +424,7 @@ function Example({ usersData , setProps  }) {
                                                         children: [
                                                             /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
                                                                 className: "text-sm text-gray-900",
-                                                                children: person.createdAt.substr(0, 10).split('-').reverse().join('/')
+                                                                children: person.createdAt.substr(0, 10).split('-').join('/')
                                                             }),
                                                             /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
                                                                 className: "text-sm text-gray-500"
@@ -397,7 +439,7 @@ function Example({ usersData , setProps  }) {
                                                         children: [
                                                             /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
                                                                 className: "text-sm text-gray-900",
-                                                                children: person.updatedAt.substr(0, 10).split('-').reverse().join('/')
+                                                                children: person.updatedAt.substr(0, 16).split('-').join('/')
                                                             }),
                                                             /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
                                                                 className: "text-sm text-gray-500"
@@ -416,6 +458,8 @@ function Example({ usersData , setProps  }) {
                                                         children: [
                                                             /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("a", {
                                                                 href: "#",
+                                                                onClick: ()=>edit(person.id, person.name, person.user, person.createdAt, person.updatedAt, person.password)
+                                                                ,
                                                                 className: "text-indigo-600 hover:text-indigo-900 mr-3",
                                                                 children: "Edit"
                                                             }),
@@ -549,6 +593,208 @@ function MyModal(props) {
                                             className: "inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500",
                                             onClick: closeModal,
                                             children: props.btnTitle
+                                        })
+                                    })
+                                ]
+                            })
+                        })
+                    ]
+                })
+            })
+        })
+    }));
+};
+
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } });
+
+/***/ }),
+
+/***/ 207:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (/* binding */ MyModal)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(997);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(185);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _auth_AuthInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(89);
+/* harmony import */ var _data_api_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(757);
+/* harmony import */ var _components_icons_index__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(728);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_headlessui_react__WEBPACK_IMPORTED_MODULE_1__]);
+_headlessui_react__WEBPACK_IMPORTED_MODULE_1__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+
+
+
+
+
+
+function MyModal(props) {
+    let { 0: isOpen , 1: setIsOpen  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true);
+    const { 0: id , 1: setId  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)('');
+    const { 0: user1 , 1: setUser  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(props.user);
+    const { 0: nameUser , 1: setNameUser  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(props.userName);
+    const { 0: createdAt , 1: setCreatedAt  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)('');
+    const { 0: updatedAt , 1: setUpdatedAt  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)('');
+    const { 0: password1 , 1: setPassword  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)('');
+    const { 0: error , 1: setError  } = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)('');
+    function closeModal() {
+        // window.location.reload()
+        // setIsOpen(false)
+        props.showModal(false);
+    }
+    function openModal() {
+        setIsOpen(true);
+    }
+    console.log(props.id);
+    const put = async (user, name, password)=>{
+        const { api , headers  } = _data_api_api__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z;
+        const url = `/users/${props.id}`;
+        await api.put(url, {
+            user: user,
+            name: name,
+            password: password
+        }, headers).then((response)=>{
+            window.location.reload();
+        }).catch((err)=>setError(err.response.data)
+        );
+    };
+    return(/*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+        children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Transition, {
+            appear: true,
+            show: isOpen,
+            as: react__WEBPACK_IMPORTED_MODULE_2__.Fragment,
+            children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Dialog, {
+                as: "div",
+                className: "fixed inset-0 z-10 overflow-y-auto",
+                onClose: closeModal,
+                children: /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                    className: "min-h-screen px-4 text-center",
+                    children: [
+                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Transition.Child, {
+                            as: react__WEBPACK_IMPORTED_MODULE_2__.Fragment,
+                            enter: "ease-out duration-300",
+                            enterFrom: "opacity-0",
+                            enterTo: "opacity-100",
+                            leave: "ease-in duration-200",
+                            leaveFrom: "opacity-100",
+                            leaveTo: "opacity-0",
+                            children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Dialog.Overlay, {
+                                className: "fixed inset-0"
+                            })
+                        }),
+                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                            className: "inline-block h-screen align-middle",
+                            "aria-hidden": "true",
+                            children: "​"
+                        }),
+                        /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Transition.Child, {
+                            as: react__WEBPACK_IMPORTED_MODULE_2__.Fragment,
+                            enter: "ease-out duration-300",
+                            enterFrom: "opacity-0 scale-95",
+                            enterTo: "opacity-100 scale-100",
+                            leave: "ease-in duration-200",
+                            leaveFrom: "opacity-100 scale-100",
+                            leaveTo: "opacity-0 scale-95",
+                            children: /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                                className: "inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl",
+                                children: [
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_headlessui_react__WEBPACK_IMPORTED_MODULE_1__.Dialog.Title, {
+                                        as: "h3",
+                                        className: "text-lg font-medium leading-6 text-gray-900"
+                                    }),
+                                    error ? /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                                        className: `
+                        flex items-center
+                        bg-red-400 text-white py-3 px-5 my-2
+                        border border-red-700 rounded-lg
+                    `,
+                                        children: [
+                                            (0,_components_icons_index__WEBPACK_IMPORTED_MODULE_5__/* .IconeAtencao */ .wn)(),
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("span", {
+                                                className: "ml-3",
+                                                children: error
+                                            })
+                                        ]
+                                    }) : false,
+                                    /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                                        className: "mt-2 text-sm text-gray-500 flex flex-col items-end pr-10",
+                                        children: [
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_auth_AuthInput__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+                                                label: "Id:",
+                                                changeValue: setId,
+                                                value: id,
+                                                placeholder: props.id,
+                                                type: "text",
+                                                disabled: true
+                                            }),
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_auth_AuthInput__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+                                                label: "Usuario:",
+                                                changeValue: setUser,
+                                                value: user1,
+                                                placeholder: props.user,
+                                                type: "text",
+                                                disabled: true
+                                            }),
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_auth_AuthInput__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+                                                label: "Nome:",
+                                                changeValue: setNameUser,
+                                                value: nameUser,
+                                                placeholder: props.userName,
+                                                type: "text",
+                                                disabled: false
+                                            }),
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_auth_AuthInput__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+                                                label: "Nova senha:",
+                                                changeValue: setPassword,
+                                                value: password1,
+                                                type: "password",
+                                                disabled: false,
+                                                placeholder: "**********"
+                                            }),
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_auth_AuthInput__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+                                                label: "Created at:",
+                                                changeValue: setCreatedAt,
+                                                value: createdAt,
+                                                placeholder: props.createdAt.substr(0, 16).split('-').join('/'),
+                                                type: "text",
+                                                disabled: true
+                                            }),
+                                            /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_auth_AuthInput__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z, {
+                                                label: "Updated at:",
+                                                changeValue: setUpdatedAt,
+                                                value: updatedAt,
+                                                placeholder: props.updatedAt.substr(0, 16).split('-').join('/'),
+                                                type: "text",
+                                                disabled: true
+                                            })
+                                        ]
+                                    }),
+                                    /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                                        className: "mt-4 flex flex-col items-end",
+                                        children: /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                                            children: [
+                                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("button", {
+                                                    type: "button",
+                                                    className: "mr-4 inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500",
+                                                    // onClick={closeModal}
+                                                    onClick: ()=>put(user1, nameUser, password1)
+                                                    ,
+                                                    children: "Salvar"
+                                                }),
+                                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("button", {
+                                                    type: "button",
+                                                    className: "inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500",
+                                                    // onClick={closeModal}
+                                                    onClick: ()=>closeModal()
+                                                    ,
+                                                    children: "Voltar"
+                                                })
+                                            ]
                                         })
                                     })
                                 ]
@@ -721,9 +967,10 @@ __webpack_async_result__();
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "wn": () => (/* binding */ IconeAtencao),
 /* harmony export */   "XH": () => (/* binding */ TrashIcon)
 /* harmony export */ });
-/* unused harmony exports IconeCasa, IconeAjustes, IconeSino, IconeSair, IconeSol, IconeLua, IconeAtencao */
+/* unused harmony exports IconeCasa, IconeAjustes, IconeSino, IconeSair, IconeSol, IconeLua */
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(997);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -808,13 +1055,13 @@ const IconeLua = (tamanho = 6)=>/*#__PURE__*/ _jsx("svg", {
         })
     })
 ;
-const IconeAtencao = (tamanho = 6)=>/*#__PURE__*/ _jsx("svg", {
+const IconeAtencao = (tamanho = 6)=>/*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         className: `h-${tamanho} w-${tamanho}`,
         fill: "none",
         viewBox: "0 0 24 24",
         stroke: "currentColor",
-        children: /*#__PURE__*/ _jsx("path", {
+        children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("path", {
             strokeLinecap: "round",
             strokeLinejoin: "round",
             strokeWidth: 2,

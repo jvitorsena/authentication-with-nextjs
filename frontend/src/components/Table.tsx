@@ -3,6 +3,7 @@ import Api from "../data/api/api"
 import axios from 'axios'
 import { useEffect, useState } from "react";
 import Modal from "./TableModal";
+import UserEditModal from "./UserEditModal"
 
 interface UserProps {
     id: number
@@ -18,8 +19,16 @@ interface UserProps {
 export default function Example({ usersData, setProps }) {
 
     const [showModal, setShowModal] = useState<Boolean>(false)
-    const [userName, setUserName] = useState('')
+    const [modalEdit, setModalEdit] = useState<Boolean>(false)
 
+    const [id, setId] = useState<Number>(0)
+    const [user, setUser] = useState('')
+    const [nameUser, setNameUser] = useState('')
+    const [createdAt, setCreatedAt] = useState('')
+    const [updatedAt, setUpdatedAt] = useState('')
+    const [password, setPassword] = useState('')
+
+    
     const { api, headers } = Api
 
     const del = async function (atr, name) {
@@ -29,16 +38,26 @@ export default function Example({ usersData, setProps }) {
         const headers = { 'headers': { 'Content-Type': 'application/json' } }
         const users = await axios.delete(url, { data: {} })
             .then((response) => {
-                console.log(response.data)
+                // console.log(response.data)
             })
         // setUserName(name)
         setShowModal(true)
     }
 
-    // console.log(props.usersData)
+    const edit = (id, name, user, createdAt, updatedAt, password ) => {
+        setId(id)
+        setUser(user)
+        setNameUser(name)
+        setPassword(password)
+        setCreatedAt(createdAt)
+        setUpdatedAt(updatedAt)
+        setModalEdit(true)
+    }
+
     return (
         <div className="flex flex-col">
-            {(showModal) ? <Modal title="Usuario deletado" btnTitle="sair" subTitle={userName} /> : null}
+            {(showModal) ? <Modal title="Usuario deletado" btnTitle="sair" subTitle={user} /> : null}
+            {(modalEdit) ? <UserEditModal showModal={setModalEdit} id={id} user={user} userName={nameUser} createdAt={createdAt} updatedAt={updatedAt} password={password} /> : null}
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -90,11 +109,11 @@ export default function Example({ usersData, setProps }) {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap" style={{ textAlign: 'center' }}>
-                                            <div className="text-sm text-gray-900">{person.createdAt.substr(0, 10).split('-').reverse().join('/')}</div>
+                                            <div className="text-sm text-gray-900">{person.createdAt.substr(0, 10).split('-').join('/')}</div>
                                             <div className="text-sm text-gray-500">{ }</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap" style={{ textAlign: 'center' }}>
-                                            <div className="text-sm text-gray-900">{person.updatedAt.substr(0, 10).split('-').reverse().join('/')}</div>
+                                            <div className="text-sm text-gray-900">{person.updatedAt.substr(0, 16).split('-').join('/')}</div>
                                             <div className="text-sm text-gray-500">{ }</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -103,7 +122,7 @@ export default function Example({ usersData, setProps }) {
                                             </span>
                                         </td>
                                         <td className="flex flex-row items-center px-3 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="#" className="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <a href="#" onClick={() => edit(person.id, person.name, person.user, person.createdAt, person.updatedAt, person.password)} className="text-indigo-600 hover:text-indigo-900 mr-3">
                                                 Edit
                                             </a>
                                             <a href="#" className="text-indigo-600 hover:text-indigo-900">
@@ -115,8 +134,8 @@ export default function Example({ usersData, setProps }) {
                                     </tr>
                                 ))}
                             </tbody>
-
                         </table>
+                        {/* <UserEditModal /> */}
                         <div className="bg-white w-full flex flex-col items-end">
                             <button
                                 onClick={() => setProps('welcome')}

@@ -14,6 +14,9 @@ export default function Login() {
     mensagem: ''
   })
 
+  const date = new Date()
+  console.log(date)
+
   async function login(usuario, senha) {
     try {
         await Cookie.remove('admin')
@@ -48,6 +51,7 @@ export default function Login() {
           value={user}
           type="text"
           changeValue={setUser}
+          disabled={false}
         />
 
         <AuthInput
@@ -55,6 +59,7 @@ export default function Login() {
           value={password}
           type="password"
           changeValue={setPasswd}
+          disabled={false}
         />
 
         <div className="mt-6 w-full flex flex-col items-center">

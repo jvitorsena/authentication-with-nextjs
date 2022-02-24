@@ -22,6 +22,9 @@ consign()
     .then('./config/routes.js')
     .into(app)
 
+
+    // console.log(date.toLocaleString('pt-br', {timezone: 'Brazil/brt'}));
+
 app.listen(5000, () => {
     console.log('Backend executando na porta 5000...')
 })

@@ -3,6 +3,8 @@ interface AuthInputProps {
     value: any
     type?: 'text' | 'password'
     changeValue: (newValue: any) => void
+    placeholder?: any
+    disabled: boolean
 }
 
 export default function AuthInput(props: AuthInputProps) {
@@ -14,6 +16,8 @@ export default function AuthInput(props: AuthInputProps) {
                     type={props.type}
                     value={props.value}
                     onChange={e => props.changeValue?.(e.target.value)}
+                    placeholder={props.placeholder}
+                    disabled={props.disabled}
                     className={`
                         px-4 py-1 rounded-lg bg-gray-200 mt-2
                         border focus:border-blue-500 focus:bg-white

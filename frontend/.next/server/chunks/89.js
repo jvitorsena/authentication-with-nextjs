@@ -28,6 +28,8 @@ function AuthInput(props) {
                         var ref;
                         return (ref = props.changeValue) === null || ref === void 0 ? void 0 : ref.call(props, e.target.value);
                     },
+                    placeholder: props.placeholder,
+                    disabled: props.disabled,
                     className: `
                         px-4 py-1 rounded-lg bg-gray-200 mt-2
                         border focus:border-blue-500 focus:bg-white
