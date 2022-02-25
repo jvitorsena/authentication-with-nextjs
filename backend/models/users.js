@@ -12,10 +12,7 @@ module.exports = app => {
         isActive:       {type: Sequelize.DataTypes.BOOLEAN, defaultValue: true},
     }, {freezeTableName: true})
 
-    // const date = new Date()
-    // console.log(date)
-
-    users.sync()
+    // users.sync()
 
     module.exports = {users}
 }

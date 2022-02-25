@@ -2,10 +2,9 @@ import ForcarAutenticacao from "../components/auth/ForcarAutenticacao";
 import Api from '../data/api/api.js'
 import * as cookie from 'cookie'
 import { useState } from "react";
-import NewUser from "../components/NewUser";
+import NewUser from "../components/NewUserForm";
 import Welcome from "../components/Welcome"
-import Table from '../components/Table'
-
+import Table from '../components/UsersTable'
 interface user {
   id: Number
   name: string

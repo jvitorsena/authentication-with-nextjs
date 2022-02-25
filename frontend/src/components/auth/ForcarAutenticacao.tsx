@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import loading from '../../../public/images/loading.gif'
 import Api from '../../data/api/api'
-import Modal from '../../components/Modal'
+import Modal from './ModalWarningAuth'
 
 interface ResProps {
     validation: Boolean

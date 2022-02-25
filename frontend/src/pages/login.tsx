@@ -1,42 +1,35 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { useState } from "react"
 import AuthInput from "../components/auth/AuthInput"
 import Image from "next/image"
 import Cookie from 'js-cookie'
 import axios from "axios"
 import Router from "next/router"
+import { IconeAtencao } from "../components/icons"
 
 export default function Login() {
 
   const [user, setUser] = useState('')
   const [password, setPasswd] = useState('')
-  const [msg, setMsg] = useState({
-    type: '',
-    mensagem: ''
-  })
-
-  const date = new Date()
-  console.log(date)
+  const [error, setError] = useState('')
 
   async function login(usuario, senha) {
     try {
-        await Cookie.remove('admin')
-        const headers = { 'headers': { 'Content-Type': 'application/json' } }
-        await axios.create({ baseURL: 'http://localhost:5000' })
-            .post("/signin", { user: usuario, password: senha }, headers)
-            .then((response) => {
-                Cookie.set('admin', response.data.token)
-                Router.push('/')
-            })
-            .catch((err) => {
-                setMsg({
-                    type: 'error',
-                    mensagem: err.response.data
-                })
-            })
+      await Cookie.remove('admin')
+      const headers = { 'headers': { 'Content-Type': 'application/json' } }
+      await axios.create({ baseURL: 'http://localhost:5000' })
+        .post("/signin", { user: usuario, password: senha }, headers)
+        .then((response) => {
+          Cookie.set('admin', response.data.token)
+          Router.push('/')
+        })
+        .catch((err) => {
+          setError(err.response.data)
+        })
     } finally {
-        return msg
+      // 
     }
-}
+  }
 
   return (
     <div className="flex h-screen items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500">
@@ -45,7 +38,18 @@ export default function Login() {
         <div className="w-full flex flex-col items-center py-3">
           <Image src="/images/logo.png" width={100} height={100} className="shadow-lg"></Image>
         </div>
-        {msg.type === 'error' ? <p style={{ color: "red" }}>{msg.mensagem}</p> : ""}
+
+        {error ? (
+          <div className={`
+                        flex items-center
+                        bg-red-400 text-white py-3 px-5 my-2
+                        border border-red-700 rounded-lg
+                    `}>
+            {IconeAtencao()}
+            <span className="ml-3">{error}</span>
+          </div>
+        ) : false}
+
         <AuthInput
           label="User:"
           value={user}
