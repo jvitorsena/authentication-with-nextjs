@@ -8,7 +8,7 @@ Pequeno sistema pessoal de autenticação para aprimorar meus conhecimentos em r
 
 
 
-<img src="/home/joao/Documentos/04 - Meus projetos/authentication-with-nextjs/imgProject/pathProtect.png" alt="pathProtect" style="zoom:80%;" />
+<img src="imgProject/pathProtect.png" alt="pathProtect" style="zoom:80%;" />
 
 <img src="imgProject/login.png" alt="login" style="zoom:70%;" />
 
